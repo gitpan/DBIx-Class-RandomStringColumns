@@ -1,8 +1,10 @@
 Revision history for Perl extension DBIx::Class::RandomStringColumns
 
-0.02  Thu Feb 21 21:27:22 2006
-        - fix typo
-        - add document
+0.04  Tue Jan 4 15:58:06 2007
+        - Because source_name cannot be acquired when DBIC::Schema::Loader is used, result_class is used. 
+
+0.03  Wed Nov 22 16:42:00 2006
+        - bug fixed (thx. id:nekokak)
 
 0.01  Thu Dec 22 17:53:32 2005
         - original version
