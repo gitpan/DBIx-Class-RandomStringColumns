@@ -6,7 +6,6 @@ README
 lib/DBIx/Class/RandomStringColumns.pm
 t/00.load.t
 t/01.base.t
-t/dependencies.t
 t/perlcritic.t
 t/pod-coverage.t
 t/pod.t

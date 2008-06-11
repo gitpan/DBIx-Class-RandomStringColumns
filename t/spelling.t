@@ -12,6 +12,8 @@ Fushihara
 IP
 ip
 yaml
+resambles
+behaviour
 EOF
 
 add_stopwords(@stopwords);

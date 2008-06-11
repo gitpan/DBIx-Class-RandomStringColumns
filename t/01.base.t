@@ -41,7 +41,7 @@ BEGIN {
     __PACKAGE__->set_primary_key('session_id');
     __PACKAGE__->random_string_columns('u_rand_id');
     __PACKAGE__->random_string_columns('session_id', 'rand_id2');
-    __PACKAGE__->random_string_columns('rand_id', {length => 3, solt => '[0-9]'});
+    __PACKAGE__->random_string_columns('rand_id', {length => 3, salt => '[0-9]'});
 
     1;
 }

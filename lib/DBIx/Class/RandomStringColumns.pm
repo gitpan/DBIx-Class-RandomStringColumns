@@ -2,43 +2,45 @@ package DBIx::Class::RandomStringColumns;
 use strict;
 use warnings;
 
-our $VERSION = '0.04';
+our $VERSION = '0.05';
 
 use base qw/DBIx::Class/;
 
 use String::Random;
 
-__PACKAGE__->mk_classdata( 'rs_auto_columns' => [] );
-__PACKAGE__->mk_classdata( 'rs_length' => {} );
-__PACKAGE__->mk_classdata( 'rs_solt' => {} );
+our $LENGTH = 32;
+our $SALT   = '[A-Za-z0-9]';
+
+__PACKAGE__->mk_classdata( 'rs_definition' => {} );
 
 sub random_string_columns {
     my $self = shift;
 
-    my $length = 32;
-    my $solt   = '[A-Za-z0-9]';
-
     my $opt = pop @_;
-    if (ref $opt ne 'HASH') {
+    if ( ref $opt ne 'HASH' ) {
         push @_, $opt;
-    } else {
-        $length = $opt->{length} || 32;
-        $solt   = $opt->{solt  } || '[A-Za-z0-9]';
+        $opt = {};
     }
 
-    for (@_) {
-        die "column $_ doesn't exist" unless $self->has_column($_);
-        $self->rs_length->{$_} = $length;
-        $self->rs_solt->{$_}   = $solt;
+    my $length = $opt->{length} || $LENGTH;
+    my $salt   = $opt->{salt}   || $SALT;
+
+    my $rs_definition = $self->rs_definition || {};
+    for my $column (@_) {
+        $self->throw_exception("column $column doesn't exist")
+          unless $self->has_column($column);
+        $rs_definition->{$column}->{length} = $length;
+        $rs_definition->{$column}->{salt}   = $salt;
     }
-    push @{$self->rs_auto_columns}, @_;
+
+    $self->rs_definition( $rs_definition );
 }
 
 sub insert {
     my $self = shift;
-    for my $column (@{$self->rs_auto_columns}) {
+    for my $column ( keys( %{ $self->rs_definition } ) ) {
         $self->store_column( $column, $self->get_random_string($column) )
-            unless defined $self->get_column( $column );
+          if $self->has_column($column) && !$self->get_column($column);
     }
     $self->next::method(@_);
 }
@@ -47,11 +49,18 @@ sub get_random_string {
     my $self   = shift;
     my $column = shift;
 
-    my $rs = $self->result_source->schema->resultset($self->result_source->result_class);
+    my $rs =
+      $self->result_source->schema->resultset(
+        $self->result_source->source_name );
     my $val;
-    do { # must be unique
-        $val = String::Random->new->randregex(sprintf('%s{%d}', $self->rs_solt->{$column} , $self->rs_length->{$column}));
-    } while ($rs->search({$column => $val})->count);
+    do {    # must be unique
+        $val = String::Random->new->randregex(
+            sprintf( '%s{%d}',
+                $self->rs_definition->{$column}->{salt},
+                $self->rs_definition->{$column}->{length},
+            )
+        );
+    } while ( $rs->search( { $column => $val } )->count );
 
     return $val;
 }
@@ -59,15 +68,27 @@ sub get_random_string {
 1;
 
 __END__
+
 =head1 NAME
 
 DBIx::Class::RandomStringColumns - Implicit random string columns
 
 =head1 SYNOPSIS
 
+  pacakge CD;
+  __PACKAGE__->load_components(qw/RandomStringColumns Core DB/);
+  __PACKAGE__->random_string_columns('uid');
+
   pacakge Artist;
   __PACKAGE__->load_components(qw/RandomStringColumns Core DB/);
-  __PACKAGE__->random_string_columns('rid', {length => 10});
+  __PACKAGE__->random_string_columns(['rid', {length => 10}]);
+
+  package LoginUser
+  __PACKAGE__->load_components(qw/RandomStringColumns Core DB/);
+  __PACKAGE__->random_string_columns(
+    ['rid', {length => 10}],
+    ['login_id', {length => 15, solt => '[0-9]'}],
+  );
 
 =head1 DESCRIPTION
 
@@ -81,6 +102,18 @@ Note that the component needs to be loaded before Core.
 =head2 insert
 
 =head2 random_string_columns
+
+  $pkg->random_string_columns('uid'); # uid column set random string.
+  $pkg->random_string_columns(['rid', {length=>10}]); # set string length.
+  # set multi column rule
+  $pkg->random_string_columns(
+    'uid',
+    ['rid', {length => 10}],
+    ['login_id', {length => 15, solt => '[0-9]'}],
+  );
+
+  this method need column name, and random string generate option.
+  option is "length", and "solt".
 
 =head2 get_random_string
 
