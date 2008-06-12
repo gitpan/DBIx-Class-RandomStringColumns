@@ -2,7 +2,7 @@ package DBIx::Class::RandomStringColumns;
 use strict;
 use warnings;
 
-our $VERSION = '0.05';
+our $VERSION = '0.06';
 
 use base qw/DBIx::Class/;
 
@@ -92,7 +92,7 @@ DBIx::Class::RandomStringColumns - Implicit random string columns
 
 =head1 DESCRIPTION
 
-This L<DBIx::Class> component resambles the behaviour of
+This L<DBIx::Class> component reassemble the behavior of
 L<Class::DBI::Plugin::RandomStringColumn>, to make some columns implicitly created as random string.
 
 Note that the component needs to be loaded before Core.

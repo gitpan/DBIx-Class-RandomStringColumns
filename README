@@ -1,18 +1,27 @@
-DBIx-Class-RandomStringColumns version 0.0.1
+This is Perl module DBIx::Class::RandomStringColumns.
 
 INSTALLATION
 
-To install this module, run the following commands:
+DBIx::Class::RandomStringColumns installation is straightforward. If your CPAN shell is set up,
+you should just be able to do
 
-    perl Makefile.PL
-    make
-    make test
-    make install
+    % cpan DBIx::Class::RandomStringColumns
 
+Download it, unpack it, then build it as per the usual:
 
-COPYRIGHT AND LICENCE
+    % perl Makefile.PL
+    % make && make test
 
-Copyright (C) 2006, Kan Fushihara
+Then install it:
 
-This library is free software; you can redistribute it and/or modify
-it under the same terms as Perl itself.
+    % make install
+
+DOCUMENTATION
+
+DBIx::Class::RandomStringColumns documentation is available as in POD. So you can do:
+
+    % perldoc DBIx::Class::RandomStringColumns
+
+to read the documentation online with your favorite pager.
+
+KAN Fushihara
