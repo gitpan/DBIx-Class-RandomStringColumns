@@ -811,6 +811,7 @@ sub diag {
 
 #line 1234
 
+use Encode;
 sub _print {
     my($self, @msgs) = @_;
 
@@ -830,10 +831,14 @@ sub _print {
     # Stick a newline on the end if it needs it.
     $msg .= "\n" unless $msg =~ /\n\Z/;
 
-    print $fh $msg;
+    if ( Encode::is_utf8($msg) ) {
+        print $fh encode('utf-8', $msg);
+    } else {
+        print $fh $msg;
+    }
 }
 
-#line 1268
+#line 1273
 
 sub _print_diag {
     my $self = shift;
@@ -843,7 +848,7 @@ sub _print_diag {
     print $fh @_;
 }    
 
-#line 1305
+#line 1310
 
 sub output {
     my($self, $fh) = @_;
@@ -947,7 +952,7 @@ sub _copy_io_layers {
     });
 }
 
-#line 1423
+#line 1428
 
 sub _message_at_caller {
     my $self = shift;
@@ -976,7 +981,7 @@ sub _plan_check {
     }
 }
 
-#line 1471
+#line 1476
 
 sub current_test {
     my($self, $num) = @_;
@@ -1012,7 +1017,7 @@ sub current_test {
 }
 
 
-#line 1516
+#line 1521
 
 sub summary {
     my($self) = shift;
@@ -1020,14 +1025,14 @@ sub summary {
     return map { $_->{'ok'} } @{ $self->{Test_Results} };
 }
 
-#line 1571
+#line 1576
 
 sub details {
     my $self = shift;
     return @{ $self->{Test_Results} };
 }
 
-#line 1597
+#line 1602
 
 sub todo {
     my($self, $pack) = @_;
@@ -1042,7 +1047,7 @@ sub todo {
                                      : 0;
 }
 
-#line 1622
+#line 1627
 
 sub caller {
     my($self, $height) = @_;
@@ -1052,9 +1057,9 @@ sub caller {
     return wantarray ? @caller : $caller[0];
 }
 
-#line 1634
+#line 1639
 
-#line 1648
+#line 1653
 
 #'#
 sub _sanity_check {
@@ -1067,7 +1072,7 @@ sub _sanity_check {
           'Somehow you got a different number of results than tests ran!');
 }
 
-#line 1669
+#line 1674
 
 sub _whoa {
     my($self, $check, $desc) = @_;
@@ -1080,7 +1085,7 @@ WHOA
     }
 }
 
-#line 1691
+#line 1696
 
 sub _my_exit {
     $? = $_[0];
@@ -1089,7 +1094,7 @@ sub _my_exit {
 }
 
 
-#line 1704
+#line 1709
 
 sub _ending {
     my $self = shift;
@@ -1201,6 +1206,6 @@ END {
     $Test->_ending if defined $Test and !$Test->no_ending;
 }
 
-#line 1871
+#line 1876
 
 1;

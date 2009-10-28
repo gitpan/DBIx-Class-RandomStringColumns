@@ -2,7 +2,7 @@ package DBIx::Class::RandomStringColumns;
 use strict;
 use warnings;
 
-our $VERSION = '0.06';
+our $VERSION = '0.07';
 
 use base qw/DBIx::Class/;
 
@@ -11,7 +11,7 @@ use String::Random;
 our $LENGTH = 32;
 our $SALT   = '[A-Za-z0-9]';
 
-__PACKAGE__->mk_classdata( 'rs_definition' => {} );
+__PACKAGE__->mk_classdata( 'rs_definition' );
 
 sub random_string_columns {
     my $self = shift;
@@ -38,7 +38,7 @@ sub random_string_columns {
 
 sub insert {
     my $self = shift;
-    for my $column ( keys( %{ $self->rs_definition } ) ) {
+    for my $column ( keys( %{ $self->rs_definition || {} } ) ) {
         $self->store_column( $column, $self->get_random_string($column) )
           if $self->has_column($column) && !$self->get_column($column);
     }
@@ -60,7 +60,7 @@ sub get_random_string {
                 $self->rs_definition->{$column}->{length},
             )
         );
-    } while ( $rs->search( { $column => $val } )->count );
+    } while ( $rs->search( { "me.$column" => $val } )->count );
 
     return $val;
 }
