@@ -4,13 +4,14 @@ author:
   - 'Kan Fushihara  C<< <kan __at__ mobilefactory.jp> >>'
 build_requires:
   ExtUtils::MakeMaker: 6.36
+  Perl::Critic: 1.118
   Test::Perl::Critic: 0
 configure_requires:
   CPAN::Meta: 0
   CPAN::Meta::Prereqs: 0
   Module::Build: 0.38
 dynamic_config: 0
-generated_by: 'Minilla/v0.5.6, CPAN::Meta::Converter version 2.120921'
+generated_by: 'Minilla/v0.6.4, CPAN::Meta::Converter version 2.131560'
 license: perl
 meta-spec:
   url: http://module-build.sourceforge.net/META-spec-v1.4.html
@@ -28,7 +29,7 @@ no_index:
 provides:
   DBIx::Class::RandomStringColumns:
     file: lib/DBIx/Class/RandomStringColumns.pm
-    version: 0.08
+    version: 0.09
 requires:
   DBIx::Class: 0.08009
   Filter::Util::Call: 0
@@ -37,7 +38,7 @@ resources:
   bugtracker: https://github.com/kan/p5-dbic-random-string-columns/issues
   homepage: https://github.com/kan/p5-dbic-random-string-columns
   repository: git://github.com/kan/p5-dbic-random-string-columns.git
-version: 0.08
+version: 0.09
 x_contributors:
   - 'kan <kan@d0d07461-0603-4401-acd4-de1884942a52>'
   - 'tomi-ru <tomi-ru@d0d07461-0603-4401-acd4-de1884942a52>'
